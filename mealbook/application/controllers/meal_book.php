@@ -3,6 +3,9 @@
 	function __construct()
  	{
  		parent::__construct();
+
+
+
  		$this->load->helper('url');
  		//$this->load->model('Message');
  		$this->load->library('form_validation');
@@ -20,7 +23,7 @@
  		print_r("xx");
  		// $md = array('8888',$menuid);
  		// $this->mauth->get_auth($this->session->userdata('power'),$md);
- 		$arrProject = $this->common->generatePj(array('鲜粥道'),"project");
+ 		$arrProject = $this->common->generatePj(array('鲜粥�?),"project");
  		$data['project'] = $arrProject;
  		$data['border'] = 0;
  		//$data['menuid'] = $menuid;
@@ -32,7 +35,7 @@
  		// $md = array('8888',$menuid);
  		// $this->mauth->get_auth($this->session->userdata('power'),$md); 	
  		$this->load->model('/meal/meal_book');
- 		$arrProject = $this->common->generateSelPjByid(array('鲜粥道'),"project",$this->input->post('project'));
+ 		$arrProject = $this->common->generateSelPjByid(array('鲜粥�?),"project",$this->input->post('project'));
  		$data['project'] = $arrProject;
  		$data['menudata'] = $this->meal_book->menulist();
  		//$data['menuid'] = $menuid;
@@ -48,7 +51,7 @@
 
  	function meal_rank()
  	{
- 		print_r("暂无，敬请期待…………");
+ 		print_r("暂无，敬请期待………�?);
  	}
 }
 
