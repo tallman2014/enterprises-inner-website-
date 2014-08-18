@@ -81,6 +81,12 @@ $(".portfolio-1").slideUp();}
 <script src=<?php echo $this->config->item('base_url')."/js/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.js"?> type="text/javascript"></script>
 
 <script type="text/javascript">
+
+function init_customer(){
+	var date = new Date();
+	document.cookie="customer='';expires=" + date.toGMTString();
+}
+
 function init_InameArr(){
 var date = new Date();
 document.cookie="InameArr='';expires=" + date.toGMTString();
@@ -219,7 +225,7 @@ function updateOrderCookie()
     }
    
  var Then = new Date();
-    Then.setTime(Then.getTime()+30*60*1000);
+    Then.setTime(Then.getTime()+60*60*1000);
  document.cookie="24_OrderForm="+escape(item_detail)+";expires=" + Then.toGMTString();
 }
 //End--订单更新
@@ -251,7 +257,7 @@ function updataOrderData_json()
         + '"item_amount"' + ":" + "\""+document.getElementById("Num"+ i).value +"\""+ ","
         + '"item_sum"' + ":" + "\""+ document.getElementById('test').rows[i].cells[3].innerText + "\"" + "}" ;
     console.log("4");
-    data_json = '{"orders":{' + '"姓名"' + ":" + "\"" + customer_name + "\"" + ","+ '"订餐信息"' + ":" + "[" + data_json + "]" + "," + '"总计"' + ":" + "\"" + money + "\"" + '}' + "}";
+    data_json = '{"orders":{' + '"customer_name"' + ":" + "\"" + customer_name + "\"" + ","+ '"orders_info"' + ":" + "[" + data_json + "]" + "," + '"total"' + ":" + "\"" + money + "\"" + '}' + "}";
     console.log(data_json);
     return data_json;
 }
@@ -357,7 +363,7 @@ function SetOrderForm(item_no,item_name,item_amount,item_price)
         InameArr = unescape(ReadOrderForm('InameArr')); //如果已存在，将InameArr的值取出来反解码成字符串
       }
         var Then = new Date();
-        Then.setTime(Then.getTime()+30*60*1000);
+        Then.setTime(Then.getTime()+60*60*1000);
 
         var item_detail="|"+item_no+"&"+item_name+"&"+item_price+"&"+item_amount;
         var itemname="|"+item_name;
@@ -365,7 +371,7 @@ function SetOrderForm(item_no,item_name,item_amount,item_price)
         var flag=false;
 
 
-                console.log(InameArr);
+                //console.log(InameArr);
                 if (InameArr==null) 
                 { 
                     document.cookie="24_OrderForm=" + mer_list+escape(item_detail)+";expires=" + Then.toGMTString();
@@ -482,6 +488,45 @@ function book(name,value)
   document.getElementById("booklist").innerHTML = booklist;
   document.getElementById("money").innerHTML = money;
 }
+//保存用户的名字信息到cookie，设置为永久
+function save_Customername(){
+	var customer_name=document.getElementById("customer_name").value;
+	var Then = new Date();
+    Then.setTime(Then.getTime()+60*60*1000);
+
+    if(!(ReadOrderForm('customer')))//判断cookie中是否有customer以及customer的值，如果没有，初始化
+        {
+	          init_customer();
+	          var customer = '';
+	          document.cookie="customer="+escape(customer_name)+";expires=" + Then.toGMTString();
+        }
+        else 
+        {
+		    var customer=ReadOrderForm('customer');
+		 	document.cookie="customer="+customer+escape('|'+customer_name)+";expires=" + Then.toGMTString();
+		 	console.log(customer);
+ 		}
+}
+
+function insert_customer(){
+	if(!(ReadOrderForm('customer')))//判断cookie中是否有customer以及customer的值，如果没有，初始化
+        {
+	          
+	          return;
+        }
+        else 
+        {
+		    var customer=unescape(ReadOrderForm('customer'));
+		    var cusArr = new array();
+		 	cusArr = customer.split("|");
+		 	if(document.getElementById("customer_name").value!=null)
+		 	{
+		 		document.getElementById("customer_name").value = cusArr[0];
+		 	}
+		 	console.log(document.getElementById("customer_name").value);
+ 		}
+}
+
 
 function confirm()
 {
@@ -489,7 +534,8 @@ function confirm()
   document.getElementById('data_list').value = updataOrderData_json();
   var money = parseInt(document.getElementById("total").innerHTML);
   alert("你一共需要支付" + money + "人民币！" );
-  console.log(document.getElementById('data_list').value);
+  //console.log(document.getElementById('data_list').value);
+  save_Customername();
 }
 
 </script>
@@ -687,6 +733,7 @@ table.hovertable td {
 							  </p><br/>
   <script>
     window.WriteOrderInDiv();
+    window.insert_customer();
     </script>
 
 							  <?php if(!empty($menudata)): ?>
@@ -700,7 +747,7 @@ table.hovertable td {
 							      </table>
 							      <p class = "STYLE22" type="text" id"submitinput" name="submit_article">
 							      您的大名：
-							      <input  class = "STYLE22" type="text" id="customer_name" name="customer_name"> </input>
+							      <input  class = "STYLE22" type="text" id="customer_name" name="customer_name" value=""> </input>
 							      <input type="hidden" name="data_list" id="data_list" value="xxx"></input>
 							      <input  class = "STYLE22" type="submit" id"submitinput" name="submit_article" value="确认订餐" onclick="confirm()">
 							      </p>
